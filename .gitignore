@@ -1,0 +1,27 @@
+### 1. Python 虚拟环境
+venv/
+.venv/
+
+### 2. Python 缓存文件
+__pycache__/
+*.py[cod]
+*.pyo
+
+### 3. 环境变量和敏感配置
+.env
+.env.*
+!.env.example
+
+### 4. PyCharm 配置
+.idea/
+
+### 5. 日志文件
+*.log
+
+### 6. 系统文件
+.DS_Store
+Thumbs.db
+
+### 7. 不上传的测试文件和个人介绍文件
+text.py
+projectintroduce.txt
