@@ -16,7 +16,7 @@ app = FastAPI(
 
 
 ### 3. 注册聊天路由
-app.include_router(router)  #括号内的router是从chat.py文件中导入的。#将 router 中定义的接口添加到 app 主应用中。
+app.include_router(router)  #⭐括号内的router是从chat.py文件中导入的。#将 router 中定义的接口添加到 app 主应用中。
 # include_router(...)是FastAPI 提供的方法。理解成：把一个 router 加入到这个 FastAPI 应用中。
 
 ### 4. 启动 FastAPI 服务

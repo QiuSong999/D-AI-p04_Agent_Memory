@@ -10,11 +10,11 @@ from contextlib import contextmanager
 
 
 ### 1. 创建工具列表
-tools = [search_user_memory, save_user_memory_tool]     #两个工具
+tools = [search_user_memory, save_user_memory_tool]     #两个长期记忆工具
 
 ### 2. 定义 Agent 获取函数
 @contextmanager
-def get_agent():
+def get_agent():        # 该函数会调用tools以及提取长期记忆的字段
     with get_checkpointer() as checkpointer:
         agent = create_agent(
             model=llm,

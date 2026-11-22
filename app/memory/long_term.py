@@ -5,7 +5,7 @@
 import redis
 
 from core.config import redis_url
-
+#⭐⭐⭐短期记忆通过 Checkpointer 接入 Agent；长期记忆通过 Tools 接入 Agent。
 
 ### 2. 创建 Redis 连接对象
 redis_client = redis.Redis.from_url(
@@ -45,7 +45,7 @@ redis_client = redis.Redis.from_url(
 ### 3. 保存用户长期记忆
 #目前只要求传入一个字典，并没有明确规定字典中应该有哪些字段、每个字段应该是什么类型。定义数据类型在memory_schema.py文件中
 def save_user_memory(user_id: str, memory: dict):
-    key = f"user_memory:{user_id}"  # user_id：用户唯一标识，key：Redis Hash 的键，例如 user_memory:1001。
+    key = f"p04long_memory:{user_id}"  # user_id：用户唯一标识，key：Redis Hash 的键，例如 user_memory:1001。
     redis_client.hset(key, mapping=memory)     # memory：需要保存的用户资料，例如 {"name": "小张", "interest": "学习 Python"}
     # .hset()：将用户资料保存到 Redis Hash 中
     """
@@ -66,6 +66,6 @@ def save_user_memory(user_id: str, memory: dict):
 
 ### 4. 读取用户长期记忆
 def get_user_memory(user_id: str):
-    key = f"user_memory:{user_id}"
+    key = f"p04long_memory:{user_id}"
     memory = redis_client.hgetall(key)     #r.hgetall(key)：读取指定 Redis Hash 中的所有字段和值。
     return memory               #将读取到的用户资料返回

@@ -6,6 +6,7 @@ from langgraph.checkpoint.redis import RedisSaver
 # RedisSaver：Checkpointer 的 Redis 实现，负责将这些状态持久化到 Redis。
 from core.config import redis_url
 
+#⭐⭐⭐短期记忆通过 Checkpointer 接入 Agent；长期记忆通过 Tools 接入 Agent。
 
 ### 2. 创建短期记忆 Checkpointer
 @contextmanager     #⭐把自己定义的函数get_checkpointer具备 with 上下文管理器的使用方式。目的是让

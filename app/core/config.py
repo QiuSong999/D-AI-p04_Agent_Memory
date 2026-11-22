@@ -20,7 +20,7 @@ if not dashscope_api_key:
 
 
 ### 5. 定义模型配置
-llm_model = "qwen-plus"
+llm_model = "deepseek-v4.1-flash-1017"
 
 llm_base_url = "https://dashscope.aliyuncs.com/compatible-mode/v1"
 

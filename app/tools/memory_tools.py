@@ -7,30 +7,62 @@
 我们需要把 Redis 的读写函数封装成 Agent 能够识别和调用的工具。
 
 这就是 memory_tools.py 的作用。
+"""
 
+"""
+短期记忆（Redis 持久化版）和长期记忆的管理方式不同。
+P04 中，短期记忆通过 LangGraph 的 Checkpointer 机制管理，不需要 Agent 主动调用工具；长期记忆则通过 Agent 工具进行读写。
 """
 
 ### 1. 导入依赖
 from langchain.tools import tool
 from langchain_core.runnables import RunnableConfig
-from memory.long_term import get_user_memory, save_user_memory
+from memory.long_term import get_user_memory, save_user_memory  #限定配置文件config的类型
 from schemas.memory_schema import UserMemory    # 长期记忆的保存模板
 
 
 ### 2. 定义查询用户长期记忆的工具
 @tool
 def search_user_memory(config: RunnableConfig) -> dict:
+    #RunnableConfig 是 LangChain 专门定义的运行时配置类型，能够表达框架支持的配置项，并提供类型提示。
     """
     根据当前用户 ID 查询用户保存的长期记忆。
     user_id 从 Agent 的运行时配置中获取。
     """
-    user_id = config["configurable"]["user_id"]
-    return get_user_memory(user_id)
+    user_id = config["configurable"]["user_id"]     #★从config配置文件中获取用户id
+    print("查询工具获取到的 user_id：", user_id)
+
+    memory = get_user_memory(user_id)
+    print("查询工具从 Redis 读取到的记忆：", memory)
+    return memory                 #⭐long_term文件中读取用户长期记忆的函数
+    """
+    1、用户请求时，已经有 user_id，如用户上传的数据：
+        {
+        "user_id": "user001",
+        "thread_id": "session001",
+        "message": "你知道我叫什么吗？"
+        }
+    2、API 把 user_id 放进 Agent 的运行时配置
+        config = {
+                "configurable": {
+                            "thread_id": request.thread_id,
+                            "user_id": request.user_id
+                                }
+                }
+    
+        result = agent.invoke(
+            {"messages": [request.message]},
+            config=config
+        )
+    3、工具通过 config 获取 user_id
+        user_id = config["configurable"]["user_id"]
+    """
 
 
 ### 3. 定义保存用户长期记忆的工具
 @tool
 def save_user_memory_tool(memory: dict, config: RunnableConfig) -> str:
+    #⭐通过此"函数签名"，大模型确定要从用于自然语言中取出长期记忆，并保存为字典的格式(详见Langchain P72)
     """
     根据当前用户 ID 保存用户的长期记忆。
     user_id 从 Agent 的运行时配置中获取。
@@ -57,7 +89,7 @@ def save_user_memory_tool(memory: dict, config: RunnableConfig) -> str:
 
     ### 6. 保存到 Redis
     user_id = config["configurable"]["user_id"]
-    save_user_memory(user_id, memory_data)
+    save_user_memory(user_id, memory_data)      ##⭐long_term文件中保存用户长期记忆的函数
 
     return "用户长期记忆保存成功。"
 

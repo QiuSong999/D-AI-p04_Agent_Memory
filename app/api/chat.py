@@ -38,7 +38,7 @@ def chat(request: ChatRequest):     # ChatRequest上传格式要求
                 "messages": [
                     {
                         "role": "user",
-                        "content": request.message
+                        "content": request.message      #request为ChatRequest对象
                     }
                 ]
             },
@@ -51,6 +51,7 @@ def chat(request: ChatRequest):     # ChatRequest上传格式要求
         )
         # thread_id区分短期会话
         # user_id区分长期记忆所属用户
+        print("Agent 完整返回结果：", result["messages"])
 
         ### 7. 返回 AI 回复
         return {
